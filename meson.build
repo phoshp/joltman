@@ -14,7 +14,7 @@ dependencies = [
 
 exe = executable(
   'joltman',
-  'joltman.cc',
+  ['src/main.cc', 'src/game.cc'],
   dependencies : dependencies,
   install : true,
 )
