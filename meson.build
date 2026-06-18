@@ -3,7 +3,7 @@ project(
   'cpp', 'c', 'objc',
   meson_version : '>= 1.3.0',
   version : '0.1',
-  default_options : ['warning_level=1', 'cpp_std=c++20'],
+  default_options : ['warning_level=1', 'cpp_std=c++20', 'default_library=static'],
 )
 
 raylib_dep = subproject('raylib').get_variable('raylib_dep')
@@ -21,6 +21,8 @@ if host_machine.system() == 'darwin'
     'CoreFoundation',
     'OpenGL'
   ])
+elif host_machine.system() == 'windows'
+  add_project_link_arguments('-static', language: ['c', 'cpp'])
 endif
 
 exe = executable(

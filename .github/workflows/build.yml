@@ -3,6 +3,8 @@ name: Build and Package
 on:
   push:
     branches: [ "main", "master" ]
+    tags:
+      - "v*"
   pull_request:
     branches: [ "main", "master" ]
   workflow_dispatch:
@@ -58,3 +60,31 @@ jobs:
       with:
         name: joltman-${{ matrix.os }}
         path: package_dir/
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create archives
+        run: |
+          cd artifacts
+          for dir in joltman-*/; do
+            dir=${dir%/}
+            cd "$dir"
+            zip -r "../../${dir}.zip" .
+            cd ..
+          done
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.zip"
