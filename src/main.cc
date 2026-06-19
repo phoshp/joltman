@@ -26,7 +26,7 @@ static void InitLevel(State& state) {
 
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
-    InitWindow(SCREEN_W, SCREEN_H, "Joltman - Zombie Shooter");
+    InitWindow(SCREEN_W, SCREEN_H, "Joltman Zombie Shooter");
     InitAudioDevice();
     SetTargetFPS(60);
 
