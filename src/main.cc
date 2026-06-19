@@ -25,10 +25,22 @@ static void InitLevel(State& state) {
 }
 
 int main() {
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
     InitWindow(SCREEN_W, SCREEN_H, "Joltman - Zombie Shooter");
     InitAudioDevice();
     SetTargetFPS(60);
+
+    const char* appDir = GetApplicationDirectory();
+    if (appDir != nullptr) {
+        ChangeDirectory(appDir);
+        if (!DirectoryExists("assets")) {
+            if (DirectoryExists("../assets")) {
+                ChangeDirectory("..");
+            } else if (DirectoryExists("../Resources/assets")) {
+                ChangeDirectory("../Resources");
+            }
+        }
+    }
 
     RenderTexture2D target = LoadRenderTexture(SCREEN_W, SCREEN_H);
 

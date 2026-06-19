@@ -15,13 +15,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
         include:
           - os: ubuntu-latest
             exe: joltman
           - os: windows-latest
             exe: joltman.exe
-          - os: macos-latest
+          - os: macos-13
+            exe: joltman
+          - os: macos-14
             exe: joltman
 
     steps:
@@ -52,8 +54,16 @@ jobs:
       shell: bash
       run: |
         mkdir -p package_dir
-        cp build/${{ matrix.exe }} package_dir/
-        cp -r assets package_dir/
+        if [[ "${{ runner.os }}" == "macOS" ]]; then
+          APP_DIR="package_dir/Joltman.app"
+          mkdir -p "$APP_DIR/Contents/MacOS"
+          mkdir -p "$APP_DIR/Contents/Resources"
+          cp build/${{ matrix.exe }} "$APP_DIR/Contents/MacOS/"
+          cp -r assets "$APP_DIR/Contents/Resources/"
+        else
+          cp build/${{ matrix.exe }} package_dir/
+          cp -r assets package_dir/
+        fi
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
